@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
+import TrackPlayer, {State, usePlaybackState, Capability} from 'react-native-track-player';
 import {
   StyleSheet,
   Text,
@@ -16,17 +17,52 @@ import songs from '../model/Data';
 
 const {width, height} = Dimensions.get('window');
 
+const setUpPlayer = async () => {
+  try {
+    console.log("are you working");
+    await TrackPlayer.setupPlayer();
+    await TrackPlayer.updateOptions({
+      stopWithApp: true,
+      capabilities: [
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+        Capability.SkipToPrevious,
+        Capability.Stop,
+        Capability.SeekTo,
+      ],
+      compactCapabilities: [Capability.Play, Capability.Pause],
+    })
+    await TrackPlayer.add(songs);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const togglePlayBack = async playBackState => {
+  const currentTrack = await TrackPlayer.getCurrentTrack();
+  if (currentTrack != null) {
+    if (playBackState == State.Paused) {
+      await TrackPlayer.play();
+    } else {
+      await TrackPlayer.pause();
+    }
+  }
+};
+
 const QuranPlayer = () => {
-  const [ suraInext, setSuraIndex ] = useState(0);
+  const playBackState = usePlaybackState();
+  const [suraInext, setSuraIndex] = useState(0);
   const scrollx = useRef(new Animated.Value(0)).current;
   useEffect(() => {
+    setUpPlayer();
     scrollx.addListener(({value}) => {
       // console.log(value);
-      const index = Math.round(value / width); 
+      const index = Math.round(value / width);
       // console.log(index)
-      setSuraIndex(index)
+      setSuraIndex(index);
     });
-  }, []);
+  },[]);
 
   const renderSuras = ({item, index}) => {
     return (
@@ -88,8 +124,16 @@ const QuranPlayer = () => {
           <TouchableOpacity onPress={() => {}}>
             <Ionicons name="play-skip-back-outline" size={35} color="#ffd369" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
-            <Ionicons name="ios-pause-circle" size={75} color="#888888" />
+          <TouchableOpacity onPress={() => togglePlayBack(playBackState)}>
+            <Ionicons
+              name={
+                playBackState === State.Playing
+                  ? 'ios-pause-circle'
+                  : 'ios-play-circle'
+              }
+              size={75}
+              color="#888888"
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {}}>
             <Ionicons

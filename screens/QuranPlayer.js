@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -17,10 +17,14 @@ import songs from '../model/Data';
 const {width, height} = Dimensions.get('window');
 
 const QuranPlayer = () => {
+  const [ suraInext, setSuraIndex ] = useState(0);
   const scrollx = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     scrollx.addListener(({value}) => {
-      console.log(value);
+      // console.log(value);
+      const index = Math.round(value / width); 
+      // console.log(index)
+      setSuraIndex(index)
     });
   }, []);
 
@@ -59,8 +63,8 @@ const QuranPlayer = () => {
         />
 
         <View style={styles.suraContent}>
-          <Text style={styles.suraTitle}>Sura title</Text>
-          <Text style={styles.suraArtist}>Sura Artist</Text>
+          <Text style={styles.suraTitle}>{songs[suraInext].title}</Text>
+          <Text style={styles.suraArtist}>{songs[suraInext].artist}</Text>
         </View>
         <View>
           <Slider

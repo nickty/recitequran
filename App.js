@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import {StyleSheet, Text, View, StatusBar} from 'react-native';
 import React from 'react';
 import QuranPlayer from './screens/QuranPlayer';
 
@@ -9,7 +9,7 @@ const App = () => {
       <QuranPlayer />
     </View>
   );
-}
+};
 
 export default App;
 
@@ -17,4 +17,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-})
+});

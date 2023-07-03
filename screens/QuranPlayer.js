@@ -22,11 +22,12 @@ import songs from '../model/Data';
 const {width, height} = Dimensions.get('window');
 
 const togglePlayBack = async playBackState => {
-  console.log(playBackState);
   const currentTrack = await TrackPlayer.getCurrentTrack();
-  console.log(currentTrack);
   if (currentTrack != null) {
+    // console.log('are you here?', State);
+    await TrackPlayer.play();
     if (playBackState == State.Paused) {
+      // console.log('from n');
       await TrackPlayer.play();
     } else {
       await TrackPlayer.pause();
@@ -50,14 +51,14 @@ const QuranPlayer = () => {
   };
 
   useEffect(() => {
-    TrackPlayer.updateOptions({
-      stopWithApp: false,
-      capabilities: [TrackPlayer.CAPABILITY_PLAY, TrackPlayer.CAPABILITY_PAUSE],
-      compactCapabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-      ],
-    });
+    // TrackPlayer.updateOptions({
+    //   stopWithApp: false,
+    //   capabilities: [TrackPlayer.CAPABILITY_PLAY, TrackPlayer.CAPABILITY_PAUSE],
+    //   compactCapabilities: [
+    //     TrackPlayer.CAPABILITY_PLAY,
+    //     TrackPlayer.CAPABILITY_PAUSE,
+    //   ],
+    // });
     setUpPlayer();
     scrollx.addListener(({value}) => {
       // console.log(value);
@@ -66,7 +67,7 @@ const QuranPlayer = () => {
       setSuraIndex(index);
     });
 
-    return () => TrackPlayer.destroy();
+    // return () => TrackPlayer.destroy();
   }, []);
 
   const renderSuras = ({item, index}) => {

@@ -1,5 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import TrackPlayer, {State, usePlaybackState, Capability} from 'react-native-track-player';
+import TrackPlayer, {
+  State,
+  usePlaybackState,
+  Capability,
+} from 'react-native-track-player';
 import {
   StyleSheet,
   Text,
@@ -17,30 +21,10 @@ import songs from '../model/Data';
 
 const {width, height} = Dimensions.get('window');
 
-const setUpPlayer = async () => {
-  try {
-    console.log("are you working");
-    await TrackPlayer.setupPlayer();
-    await TrackPlayer.updateOptions({
-      stopWithApp: true,
-      capabilities: [
-        Capability.Play,
-        Capability.Pause,
-        Capability.SkipToNext,
-        Capability.SkipToPrevious,
-        Capability.Stop,
-        Capability.SeekTo,
-      ],
-      compactCapabilities: [Capability.Play, Capability.Pause],
-    })
-    await TrackPlayer.add(songs);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const togglePlayBack = async playBackState => {
+  console.log(playBackState);
   const currentTrack = await TrackPlayer.getCurrentTrack();
+  console.log(currentTrack);
   if (currentTrack != null) {
     if (playBackState == State.Paused) {
       await TrackPlayer.play();
@@ -54,15 +38,36 @@ const QuranPlayer = () => {
   const playBackState = usePlaybackState();
   const [suraInext, setSuraIndex] = useState(0);
   const scrollx = useRef(new Animated.Value(0)).current;
+
+  const setUpPlayer = async () => {
+    try {
+      await TrackPlayer.setupPlayer();
+      await TrackPlayer.add(songs);
+      console.log('truck added');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    TrackPlayer.updateOptions({
+      stopWithApp: false,
+      capabilities: [TrackPlayer.CAPABILITY_PLAY, TrackPlayer.CAPABILITY_PAUSE],
+      compactCapabilities: [
+        TrackPlayer.CAPABILITY_PLAY,
+        TrackPlayer.CAPABILITY_PAUSE,
+      ],
+    });
     setUpPlayer();
     scrollx.addListener(({value}) => {
       // console.log(value);
       const index = Math.round(value / width);
-      // console.log(index)
+      console.log(index);
       setSuraIndex(index);
     });
-  },[]);
+
+    return () => TrackPlayer.destroy();
+  }, []);
 
   const renderSuras = ({item, index}) => {
     return (

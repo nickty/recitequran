@@ -163,13 +163,13 @@ const QuranPlayer = () => {
           <View style={styles.progressDuration}>
             <Text style={styles.progressLavelText}>
               {new Date(progress.position * 1000)
-                .toLocaleTimeString()
-                .substring(3)}
+                .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                .substring(0,5)}
             </Text>
             <Text style={styles.progressLavelText}>
               {new Date(progress.duration - progress.position * 1000)
-                .toLocaleTimeString()
-                .substring(3)}
+                .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                .substring(0,5)}
             </Text>
           </View>
         </View>

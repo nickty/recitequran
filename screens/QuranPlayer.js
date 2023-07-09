@@ -45,7 +45,7 @@ const QuranPlayer = () => {
 
   const progress = useProgress();
 
-  // changing the track
+  // changing the track check repo
   const [title, setTitle] = useState();
   const [artist, setArtist] = useState();
   const [artwork, setArtwork] = useState();
